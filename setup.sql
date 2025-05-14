@@ -1,3 +1,6 @@
+CREATE DATABASE ecommerce;
+USE ecommerce;
+
 CREATE TABLE users (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     is_admin BOOLEAN NOT NULL DEFAULT (FALSE),
@@ -7,12 +10,17 @@ CREATE TABLE users (
     cpf VARCHAR (11) NOT NULL UNIQUE
 );
 
-CREATE TABLE carts (
-	id INT AUTO_INCREMENT PRIMARY KEY
+CREATE TABLE addresses (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    state VARCHAR (30) NOT NULL,
+    city VARCHAR (64) NOT NULL,
+    cep VARCHAR (8) NOT NULL,
+    1st_line VARCHAR (100) NOT NULL,
+    2nd_line VARCHAR (100),
+    3rd_line VARCHAR (100),
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
-
-ALTER TABLE users ADD COLUMN cart_id INT;
-ALTER TABLE users ADD CONSTRAINT FOREIGN KEY (cart_id) REFERENCES cart(id);
 
 CREATE TABLE products (
 	id INT AUTO_INCREMENT PRIMARY KEY,
@@ -20,6 +28,28 @@ CREATE TABLE products (
     description VARCHAR (255) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     available_on_stock INT NOT NULL
+);
+
+CREATE TABLE carts (
+	id INT AUTO_INCREMENT PRIMARY KEY
+);
+
+CREATE TABLE orders (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    total_price DECIMAL(10,2) NOT NULL,
+    created_at TIMESTAMP,
+    user_id INT,
+    address_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (address_id) REFERENCES addresses(id)
+);
+
+CREATE TABLE orders_products (
+	quantity INT NOT NULL,
+    order_id INT,
+    product_id INT,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
 CREATE TABLE carts_products (
