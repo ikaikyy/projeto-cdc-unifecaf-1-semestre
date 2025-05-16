@@ -1,17 +1,17 @@
 USE ecommerce;
 
 -- USERS
-INSERT INTO users (is_admin, name, email, phone_number, cpf) VALUES
-(FALSE, 'Ana Souza', 'ana@example.com', '11912345678', '12345678901'),
-(TRUE, 'Carlos Lima', 'carlos@example.com', '11987654321', '23456789012'),
-(FALSE, 'Beatriz Melo', 'bia@example.com', '11911223344', '34567890123'),
-(FALSE, 'Daniel Rocha', 'daniel@example.com', '11922334455', '45678901234'),
-(TRUE, 'Elisa Martins', 'elisa@example.com', '11933445566', '56789012345'),
-(FALSE, 'Fabio Oliveira', 'fabio@example.com', '11944556677', '67890123456'),
-(FALSE, 'Gustavo Silva', 'gustavo@example.com', '11955667788', '78901234567'),
-(FALSE, 'Helena Costa', 'helena@example.com', '11966778899', '89012345678'),
-(FALSE, 'Igor Ramos', 'igor@example.com', '11977889900', '90123456789'),
-(FALSE, 'Juliana Ferreira', 'juliana@example.com', '11988990011', '01234567890');
+INSERT INTO users (name, email, phone_number, cpf) VALUES
+('Ana Souza', 'ana@example.com', '11912345678', '12345678901'),
+('Carlos Lima', 'carlos@example.com', '11987654321', '23456789012'),
+('Beatriz Melo', 'bia@example.com', '11911223344', '34567890123'),
+('Daniel Rocha', 'daniel@example.com', '11922334455', '45678901234'),
+('Elisa Martins', 'elisa@example.com', '11933445566', '56789012345'),
+('Fabio Oliveira', 'fabio@example.com', '11944556677', '67890123456'),
+('Gustavo Silva', 'gustavo@example.com', '11955667788', '78901234567'),
+('Helena Costa', 'helena@example.com', '11966778899', '89012345678'),
+('Igor Ramos', 'igor@example.com', '11977889900', '90123456789'),
+('Juliana Ferreira', 'juliana@example.com', '11988990011', '01234567890');
 
 -- ADDRESSES
 INSERT INTO addresses (state, city, cep, 1st_line, 2nd_line, 3rd_line, user_id) VALUES
