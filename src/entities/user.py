@@ -30,3 +30,23 @@ class User:
                 (self.name, self.email, self.phone_number, self.cpf, self.id))
 
         self.connection.commit()
+
+    def load_addresses(self):
+        if self.id == 0:
+            return
+
+        cursor = self.connection.cursor()
+        cursor.execute(
+            "SELECT * FROM addresses WHERE user_id=%s", (self.id))
+        rows = cursor.fetchall()
+        self.addresses = rows
+
+    def load_orders(self):
+        if self.id == 0:
+            return
+
+        cursor = self.connection.cursor()
+        cursor.execute(
+            "SELECT * FROM orders WHERE user_id=%s", (self.id))
+        rows = cursor.fetchall()
+        self.orders = rows

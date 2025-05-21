@@ -40,9 +40,26 @@ class Order:
 
         self.connection.commit()
 
+    def load_user(self):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            "SELECT * FROM users WHERE id=%s", (self.user_id))
+        row = cursor.fetchone()
+        self.user = row
+
+    def load_address(self):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            "SELECT * FROM addresses WHERE id=%s", (self.address_id))
+        row = cursor.fetchone()
+        self.address = row
+
     def load_orders_products(self):
+        if self.id == 0:
+            return
+
         cursor = self.connection.cursor()
         cursor.execute(
             "SELECT * FROM orders_products WHERE order_id=%s", (self.id))
         rows = cursor.fetchall()
-        return rows
+        self.orders_products = rows

@@ -31,7 +31,9 @@ CREATE TABLE products (
 );
 
 CREATE TABLE carts (
-	id INT AUTO_INCREMENT PRIMARY KEY
+	id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE orders (

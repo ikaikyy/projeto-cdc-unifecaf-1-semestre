@@ -41,3 +41,10 @@ class Address:
                  self.id))
 
         self.connection.commit()
+
+    def load_user(self):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            "SELECT * FROM users WHERE id=%s", (self.user_id))
+        row = cursor.fetchone()
+        self.user = row

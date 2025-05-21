@@ -1,4 +1,6 @@
 # id INT AUTO_INCREMENT PRIMARY KEY,
+# user_id INT,
+# FOREIGN KEY (user_id) REFERENCES users(id),
 # =============================================================================
 # TABLE carts_products
 # quantity INT NOT NULL,
@@ -11,8 +13,9 @@ import mysql.connector
 
 
 class Cart:
-    def __init__(self, id, connection: mysql.connector.connection.MySQLConnection):
+    def __init__(self, id, user_id, connection: mysql.connector.connection.MySQLConnection):
         self.id = id
+        self.user_id = user_id
         self.connection = connection
 
     def save(self):
@@ -26,9 +29,19 @@ class Cart:
 
         self.connection.commit()
 
-    def load_carts_products(self):
+    def load_products(self):
+        if self.id == 0:
+            return
+
         cursor = self.connection.cursor()
         cursor.execute(
             "SELECT * FROM carts_products WHERE cart_id=%s", (self.id))
         rows = cursor.fetchall()
-        return rows
+        self.products = rows
+
+    def load_user(self):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            "SELECT * FROM users WHERE id=%s", (self.user_id))
+        row = cursor.fetchone()
+        self.user = row

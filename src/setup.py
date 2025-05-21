@@ -43,7 +43,9 @@ def setup_database(connection: mysql.connector.MySQLConnection):
 
     cursor.execute("""
         CREATE TABLE carts (
-            id INT AUTO_INCREMENT PRIMARY KEY
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT,
+            FOREIGN KEY (user_id) REFERENCES users(id)
         );
     """)
 

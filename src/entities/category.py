@@ -1,5 +1,11 @@
 # id INT AUTO_INCREMENT PRIMARY KEY,
 # name VARCHAR(30),
+# =============================================================================
+# TABLE products_categories
+# product_id INT,
+# category_id INT,
+# FOREIGN KEY (product_id) REFERENCES products(id),
+# FOREIGN KEY (category_id) REFERENCES categories(id),
 
 import mysql.connector
 
@@ -24,3 +30,13 @@ class Category:
                 (self.name, self.id))
 
         self.connection.commit()
+
+    def load_products_categories(self):
+        if self.id == 0:
+            return
+
+        cursor = self.connection.cursor()
+        cursor.execute(
+            "SELECT * FROM products_categories WHERE category_id=%s", (self.id))
+        rows = cursor.fetchall()
+        self.products_categories = rows

@@ -9,6 +9,13 @@
 # category_id INT,
 # FOREIGN KEY (product_id) REFERENCES products(id),
 # FOREIGN KEY (category_id) REFERENCES categories(id),
+# ==============================================================================
+# TABLE orders_products
+# quantity INT NOT NULL,
+# order_id INT,
+# product_id INT,
+# FOREIGN KEY (order_id) REFERENCES orders(id),
+# FOREIGN KEY (product_id) REFERENCES products(id),
 
 import mysql.connector
 
@@ -38,8 +45,11 @@ class Product:
         self.connection.commit()
 
     def load_products_categories(self):
+        if self.id == 0:
+            return
+
         cursor = self.connection.cursor()
         cursor.execute(
             "SELECT * FROM products_categories WHERE product_id=%s", (self.id))
         rows = cursor.fetchall()
-        return rows
+        self.products_categories = rows
