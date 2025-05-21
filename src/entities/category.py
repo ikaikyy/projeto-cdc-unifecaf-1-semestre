@@ -16,6 +16,13 @@ class Category:
         self.name = name
         self.connection = connection
 
+    @staticmethod
+    def list_all(connection: mysql.connector.connection.MySQLConnection):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM categories")
+        rows = cursor.fetchall()
+        return rows
+
     def save(self):
         cursor = self.connection.cursor()
 

@@ -18,6 +18,13 @@ class Cart:
         self.user_id = user_id
         self.connection = connection
 
+    @staticmethod
+    def list_all(connection: mysql.connector.connection.MySQLConnection):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM carts")
+        rows = cursor.fetchall()
+        return rows
+
     def save(self):
         cursor = self.connection.cursor()
 
