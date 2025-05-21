@@ -6,6 +6,7 @@ def setup_database(connection: mysql.connector.MySQLConnection):
 
     cursor.execute("DROP DATABASE IF EXISTS ecommerce;")
     cursor.execute("CREATE DATABASE ecommerce;")
+    cursor.execute("USE ecommerce;")
 
     cursor.execute("""
         CREATE TABLE users (
