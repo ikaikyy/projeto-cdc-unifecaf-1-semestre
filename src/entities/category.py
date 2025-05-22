@@ -16,6 +16,9 @@ class Category:
         self.name = name
         self.connection = connection
 
+    def __str__(self):
+        return f"Category(id={self.id}, name='{self.name}')"
+
     @staticmethod
     def list_all(connection: mysql.connector.connection.MySQLConnection):
         cursor = connection.cursor()

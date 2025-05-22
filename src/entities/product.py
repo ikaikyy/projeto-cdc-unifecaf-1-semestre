@@ -29,6 +29,9 @@ class Product:
         self.available_on_stock = available_on_stock
         self.connection = connection
 
+    def __str__(self):
+        return f"Product(id={self.id}, name='{self.name}', description='{self.description}', price={self.price}, available_on_stock={self.available_on_stock})"
+
     @staticmethod
     def list_all(connection: mysql.connector.connection.MySQLConnection):
         cursor = connection.cursor()

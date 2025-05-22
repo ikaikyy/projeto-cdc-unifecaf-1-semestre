@@ -23,6 +23,9 @@ class Address:
         self.user_id = user_id
         self.connection = connection
 
+    def __str__(self):
+        return f"Address(id={self.id}, state='{self.state}', city='{self.city}', cep='{self.cep}', first_line='{self.first_line}', second_line='{self.second_line}', third_line='{self.third_line}', user_id={self.user_id})"
+
     @staticmethod
     def list_all(connection: mysql.connector.connection.MySQLConnection):
         cursor = connection.cursor()

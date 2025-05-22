@@ -16,6 +16,9 @@ class User:
         self.cpf = cpf
         self.connection = connection
 
+    def __str__(self):
+        return f"User(id={self.id}, name='{self.name}', email='{self.email}', phone_number='{self.phone_number}', cpf='{self.cpf}')"
+
     @staticmethod
     def list_all(connection: mysql.connector.connection.MySQLConnection):
         cursor = connection.cursor()

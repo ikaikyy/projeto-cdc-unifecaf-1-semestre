@@ -18,6 +18,9 @@ class Cart:
         self.user_id = user_id
         self.connection = connection
 
+    def __str__(self):
+        return f"Cart(id={self.id}, user_id={self.user_id})"
+
     @staticmethod
     def list_all(connection: mysql.connector.connection.MySQLConnection):
         cursor = connection.cursor()
