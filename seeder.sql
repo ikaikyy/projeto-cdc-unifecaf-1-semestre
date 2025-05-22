@@ -40,7 +40,7 @@ INSERT INTO products (name, description, price, available_on_stock) VALUES
 ('Cadeira Gamer', 'Cadeira com apoio lombar', 1200.00, 10);
 
 -- CARTS
-INSERT INTO carts (id) VALUES
+INSERT INTO carts (user_id) VALUES
 (1), (2), (3), (4), (5), (6), (7), (8), (9), (10);
 
 -- ORDERS
