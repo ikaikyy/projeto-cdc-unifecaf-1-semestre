@@ -26,6 +26,11 @@ class Cart:
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM carts")
         rows = cursor.fetchall()
+        carts = []
+        for row in rows:
+            cart = Cart(row[0], row[1], connection)
+            carts.append(cart)
+
         return rows
 
     def save(self):

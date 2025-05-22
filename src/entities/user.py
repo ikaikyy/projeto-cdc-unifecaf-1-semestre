@@ -24,7 +24,12 @@ class User:
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM users")
         rows = cursor.fetchall()
-        return rows
+        users = []
+        for row in rows:
+            user = User(row[0], row[1], row[2], row[3], row[4], connection)
+            users.append(user)
+
+        return users
 
     def save(self):
         cursor = self.connection.cursor()

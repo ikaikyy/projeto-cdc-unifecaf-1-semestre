@@ -24,6 +24,11 @@ class Category:
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM categories")
         rows = cursor.fetchall()
+        categories = []
+        for row in rows:
+            category = Category(row[0], row[1], connection)
+            categories.append(category)
+
         return rows
 
     def save(self):

@@ -37,6 +37,12 @@ class Product:
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM products")
         rows = cursor.fetchall()
+        products = []
+        for row in rows:
+            product = Product(row[0], row[1], row[2],
+                              row[3], row[4], connection)
+            products.append(product)
+
         return rows
 
     def save(self):

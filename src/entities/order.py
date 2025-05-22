@@ -33,6 +33,12 @@ class Order:
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM orders")
         rows = cursor.fetchall()
+        orders = []
+        for row in rows:
+            order = Order(row[0], row[1], row[2],
+                          row[3], row[4], connection)
+            orders.append(order)
+
         return rows
 
     def save(self):
