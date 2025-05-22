@@ -28,6 +28,15 @@ class Order:
     def __str__(self):
         return f"Order(id={self.id}, total_price={self.total_price}, created_at='{self.created_at}', user_id={self.user_id}, address_id={self.address_id})"
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "total_price": self.total_price,
+            "created_at": self.created_at,
+            "user_id": self.user_id,
+            "address_id": self.address_id
+        }
+
     @staticmethod
     def list_all(connection: mysql.connector.connection.MySQLConnection):
         cursor = connection.cursor()

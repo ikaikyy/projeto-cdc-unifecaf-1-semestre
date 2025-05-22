@@ -21,6 +21,12 @@ class Cart:
     def __str__(self):
         return f"Cart(id={self.id}, user_id={self.user_id})"
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id
+        }
+
     @staticmethod
     def list_all(connection: mysql.connector.connection.MySQLConnection):
         cursor = connection.cursor()

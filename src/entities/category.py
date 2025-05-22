@@ -19,6 +19,12 @@ class Category:
     def __str__(self):
         return f"Category(id={self.id}, name='{self.name}')"
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
+
     @staticmethod
     def list_all(connection: mysql.connector.connection.MySQLConnection):
         cursor = connection.cursor()
