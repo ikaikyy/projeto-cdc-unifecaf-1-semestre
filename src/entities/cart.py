@@ -31,7 +31,7 @@ class Cart:
             cart = Cart(row[0], row[1], connection)
             carts.append(cart)
 
-        return rows
+        return carts
 
     def save(self):
         cursor = self.connection.cursor()

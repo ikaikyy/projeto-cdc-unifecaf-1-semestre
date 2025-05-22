@@ -29,7 +29,7 @@ class Category:
             category = Category(row[0], row[1], connection)
             categories.append(category)
 
-        return rows
+        return categories
 
     def save(self):
         cursor = self.connection.cursor()

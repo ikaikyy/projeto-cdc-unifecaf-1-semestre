@@ -43,7 +43,7 @@ class Product:
                               row[3], row[4], connection)
             products.append(product)
 
-        return rows
+        return products
 
     def save(self):
         cursor = self.connection.cursor()

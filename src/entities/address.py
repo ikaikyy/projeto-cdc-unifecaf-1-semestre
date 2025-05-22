@@ -37,7 +37,7 @@ class Address:
                               row[4], row[5], row[6], row[7], connection)
             addresses.append(address)
 
-        return rows
+        return addresses
 
     def save(self):
         cursor = self.connection.cursor()

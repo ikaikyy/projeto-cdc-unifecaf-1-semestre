@@ -39,7 +39,7 @@ class Order:
                           row[3], row[4], connection)
             orders.append(order)
 
-        return rows
+        return orders
 
     def save(self):
         cursor = self.connection.cursor()
