@@ -32,7 +32,15 @@ class Product:
     def __str__(self):
         return f"Product(id={self.id}, name='{self.name}', description='{self.description}', price={self.price}, available_on_stock={self.available_on_stock})"
 
-    def as_dict(self):
+    def as_dict(self, translate=False):
+        if translate:
+            return {
+                "ID": self.id,
+                "Nome": self.name,
+                "Descrição": self.description,
+                "Preço": self.price,
+                "Disponível em estoque": self.available_on_stock
+            }
         return {
             "id": self.id,
             "name": self.name,
@@ -53,6 +61,17 @@ class Product:
             products.append(product)
 
         return products
+
+    @staticmethod
+    def get_by_id(product_id, connection: mysql.connector.connection.MySQLConnection):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM products WHERE id=%s", (product_id,))
+        row = cursor.fetchone()
+        if row:
+            return Product(row[0], row[1], row[2],
+                           row[3], row[4], connection)
+        else:
+            return None
 
     def save(self):
         cursor = self.connection.cursor()

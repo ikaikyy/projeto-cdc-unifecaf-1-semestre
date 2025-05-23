@@ -6,9 +6,11 @@ authors = [
     {name = "Kaiky Eduardo Martins de Faria",email = "kaikyeduardomf@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<4.0"
 dependencies = [
-    "mysql-connector-python (>=9.3.0,<10.0.0)"
+    "mysql-connector-python (>=9.3.0,<10.0.0)",
+    "pygobject (>=3.52.3,<4.0.0)",
+    "pygobject-stubs (>=2.13.0,<3.0.0)"
 ]
 
 

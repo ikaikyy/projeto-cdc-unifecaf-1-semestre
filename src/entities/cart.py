@@ -21,7 +21,13 @@ class Cart:
     def __str__(self):
         return f"Cart(id={self.id}, user_id={self.user_id})"
 
-    def as_dict(self):
+    def as_dict(self, translate=False):
+        if translate:
+            return {
+                "ID": self.id,
+                "ID do usuário": self.user_id
+            }
+
         return {
             "id": self.id,
             "user_id": self.user_id
@@ -38,6 +44,15 @@ class Cart:
             carts.append(cart)
 
         return carts
+
+    @staticmethod
+    def get_by_id(cart_id, connection: mysql.connector.connection.MySQLConnection):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM carts WHERE id=%s", (cart_id,))
+        row = cursor.fetchone()
+        if row:
+            return Cart(row[0], row[1], connection)
+        return None
 
     def save(self):
         cursor = self.connection.cursor()

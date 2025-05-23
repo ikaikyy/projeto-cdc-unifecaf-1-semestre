@@ -19,7 +19,13 @@ class Category:
     def __str__(self):
         return f"Category(id={self.id}, name='{self.name}')"
 
-    def as_dict(self):
+    def as_dict(self, translate=False):
+        if translate:
+            return {
+                "ID": self.id,
+                "Nome": self.name
+            }
+
         return {
             "id": self.id,
             "name": self.name
@@ -36,6 +42,15 @@ class Category:
             categories.append(category)
 
         return categories
+
+    @staticmethod
+    def get_by_id(category_id, connection: mysql.connector.connection.MySQLConnection):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM categories WHERE id=%s", (category_id,))
+        row = cursor.fetchone()
+        if row:
+            return Category(row[0], row[1], connection)
+        return None
 
     def save(self):
         cursor = self.connection.cursor()

@@ -28,7 +28,16 @@ class Order:
     def __str__(self):
         return f"Order(id={self.id}, total_price={self.total_price}, created_at='{self.created_at}', user_id={self.user_id}, address_id={self.address_id})"
 
-    def as_dict(self):
+    def as_dict(self, translate=False):
+        if translate:
+            return {
+                "ID": self.id,
+                "Preço Total": self.total_price,
+                "Criado em": self.created_at,
+                "ID do usuário": self.user_id,
+                "ID do endereço": self.address_id
+            }
+
         return {
             "id": self.id,
             "total_price": self.total_price,
@@ -49,6 +58,17 @@ class Order:
             orders.append(order)
 
         return orders
+
+    @staticmethod
+    def get_by_id(order_id, connection: mysql.connector.connection.MySQLConnection):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM orders WHERE id=%s", (order_id,))
+        row = cursor.fetchone()
+        if row:
+            return Order(row[0], row[1], row[2],
+                         row[3], row[4], connection)
+        else:
+            return None
 
     def save(self):
         cursor = self.connection.cursor()

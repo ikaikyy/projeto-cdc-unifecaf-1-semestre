@@ -26,7 +26,19 @@ class Address:
     def __str__(self):
         return f"Address(id={self.id}, state='{self.state}', city='{self.city}', cep='{self.cep}', first_line='{self.first_line}', second_line='{self.second_line}', third_line='{self.third_line}', user_id={self.user_id})"
 
-    def as_dict(self):
+    def as_dict(self, translate=False):
+        if translate:
+            return {
+                "ID": self.id,
+                "Estado": self.state,
+                "Cidade": self.city,
+                "CEP": self.cep,
+                "Logradouro": self.first_line,
+                "Complemento": self.second_line,
+                "Bairro": self.third_line,
+                "ID do usuário": self.user_id
+            }
+
         return {
             "id": self.id,
             "state": self.state,
@@ -50,6 +62,16 @@ class Address:
             addresses.append(address)
 
         return addresses
+
+    @staticmethod
+    def get_by_id(address_id, connection: mysql.connector.connection.MySQLConnection):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM addresses WHERE id=%s", (address_id,))
+        row = cursor.fetchone()
+        if row:
+            return Address(row[0], row[1], row[2], row[3],
+                           row[4], row[5], row[6], row[7], connection)
+        return None
 
     def save(self):
         cursor = self.connection.cursor()

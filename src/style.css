@@ -1,0 +1,22 @@
+.sidebar {
+  background: transparent;
+  padding: 8px;
+}
+
+.sidebar-row {
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+
+.sidebar-row.active {
+  background: color(srgb 1 1 1 / 0.1);
+}
+
+.sidebar-row-content {
+  padding: 8px;
+}
+
+.boxed-list-expander-row {
+  border: none;
+  padding: 0;
+}

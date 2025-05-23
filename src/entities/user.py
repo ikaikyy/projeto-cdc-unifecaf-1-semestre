@@ -6,6 +6,9 @@
 
 import mysql.connector
 
+from entities.address import Address
+from entities.order import Order
+
 
 class User:
     def __init__(self, id, name, email, phone_number, cpf, connection: mysql.connector.connection.MySQLConnection):
@@ -19,7 +22,16 @@ class User:
     def __str__(self):
         return f"User(id={self.id}, name='{self.name}', email='{self.email}', phone_number='{self.phone_number}', cpf='{self.cpf}')"
 
-    def as_dict(self):
+    def as_dict(self, translate=False):
+        if translate:
+            return {
+                "ID": self.id,
+                "Nome": self.name,
+                "Email": self.email,
+                "Telefone": self.phone_number,
+                "CPF": self.cpf,
+            }
+
         return {
             "id": self.id,
             "name": self.name,
@@ -39,6 +51,16 @@ class User:
             users.append(user)
 
         return users
+
+    @staticmethod
+    def get_by_id(user_id, connection: mysql.connector.connection.MySQLConnection):
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+        row = cursor.fetchone()
+        if row:
+            return User(row[0], row[1], row[2], row[3], row[4], connection)
+        else:
+            return None
 
     def save(self):
         cursor = self.connection.cursor()
@@ -61,9 +83,13 @@ class User:
 
         cursor = self.connection.cursor()
         cursor.execute(
-            "SELECT * FROM addresses WHERE user_id=%s", (self.id))
+            "SELECT * FROM addresses WHERE user_id=%s", (self.id,))
         rows = cursor.fetchall()
-        self.addresses = rows
+        self.addresses = []
+        for row in rows:
+            address = Address(row[0], row[1], row[2], row[3],
+                              row[4], row[5], row[6], row[7], self.connection)
+            self.addresses.append(address)
 
     def load_orders(self):
         if self.id == 0:
@@ -71,6 +97,10 @@ class User:
 
         cursor = self.connection.cursor()
         cursor.execute(
-            "SELECT * FROM orders WHERE user_id=%s", (self.id))
+            "SELECT * FROM orders WHERE user_id=%s", (self.id,))
         rows = cursor.fetchall()
-        self.orders = rows
+        self.orders = []
+        for row in rows:
+            order = Order(row[0], row[1], row[2],
+                          row[3], row[4], self.connection)
+            self.orders.append(order)

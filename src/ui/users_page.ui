@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="UsersPage" parent="AdwNavigationPage">
+    <property name="title">Usuários</property>
+    <child>
+      <object class="AdwClamp">
+        <property name="margin-top">120</property>
+        <property name="margin-bottom">120</property>
+        <child>
+          <object class="GtkScrolledWindow">
+            <child>
+              <object class="GtkListBox" id="users_list">
+                <property name="valign">start</property>
+                <property name="css-classes">boxed-list</property>
+                <property name="selection-mode">none</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

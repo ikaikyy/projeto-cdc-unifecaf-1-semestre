@@ -38,4 +38,5 @@ if args.interface == "cli":
     from cli import main as cli_main
     cli_main()
 elif args.interface == "gui":
-    print("GUI interface is not implemented yet.")
+    from gui import main as gui_main
+    gui_main()
