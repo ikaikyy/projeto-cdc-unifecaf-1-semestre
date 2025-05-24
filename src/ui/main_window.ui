@@ -41,6 +41,20 @@
                     </child>
                   </object>
                 </child>
+
+                <child>
+                  <object class="GtkListBoxRow" id="nav_orders">
+                    <property name="css-classes">sidebar-row</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">Pedidos</property>
+                        <property name="halign">start</property>
+                        <property name="css-classes">sidebar-row-content</property>
+                        <property name="height-request">40</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

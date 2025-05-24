@@ -15,15 +15,27 @@
 
 import mysql.connector
 
+from entities.address import Address
+from entities.product import Product
+from entities.user import User
+
 
 class Order:
-    def __init__(self, id, total_price, created_at, user_id, address_id, connection: mysql.connector.connection.MySQLConnection):
+    def __init__(
+        self,
+        id,
+        total_price,
+        user_id,
+        address_id,
+        connection: mysql.connector.connection.MySQLConnection,
+        created_at=None,
+    ):
         self.id = id
         self.total_price = total_price
-        self.created_at = created_at
         self.user_id = user_id
         self.address_id = address_id
         self.connection = connection
+        self.created_at = created_at
 
     def __str__(self):
         return f"Order(id={self.id}, total_price={self.total_price}, created_at='{self.created_at}', user_id={self.user_id}, address_id={self.address_id})"
@@ -35,7 +47,7 @@ class Order:
                 "Preço Total": self.total_price,
                 "Criado em": self.created_at,
                 "ID do usuário": self.user_id,
-                "ID do endereço": self.address_id
+                "ID do endereço": self.address_id,
             }
 
         return {
@@ -43,7 +55,7 @@ class Order:
             "total_price": self.total_price,
             "created_at": self.created_at,
             "user_id": self.user_id,
-            "address_id": self.address_id
+            "address_id": self.address_id,
         }
 
     @staticmethod
@@ -53,8 +65,7 @@ class Order:
         rows = cursor.fetchall()
         orders = []
         for row in rows:
-            order = Order(row[0], row[1], row[2],
-                          row[3], row[4], connection)
+            order = Order(row[0], row[1], row[3], row[4], connection, row[2])
             orders.append(order)
 
         return orders
@@ -65,8 +76,7 @@ class Order:
         cursor.execute("SELECT * FROM orders WHERE id=%s", (order_id,))
         row = cursor.fetchone()
         if row:
-            return Order(row[0], row[1], row[2],
-                         row[3], row[4], connection)
+            return Order(row[0], row[1], row[2], row[3], row[4], connection)
         else:
             return None
 
@@ -75,36 +85,67 @@ class Order:
 
         if self.id == 0:
             cursor.execute(
-                "INSERT INTO orders (total_price, created_at, user_id, address_id) VALUES (%s, %s, %s, %s)",
-                (self.total_price, self.created_at, self.user_id, self.address_id))
+                "INSERT INTO orders (total_price, created_at, user_id, address_id) VALUES (%s, NOW(), %s, %s)",
+                (self.total_price, self.user_id, self.address_id),
+            )
             self.id = cursor.lastrowid
         else:
             cursor.execute(
-                "UPDATE orders SET total_price=%s, created_at=%s, user_id=%s, address_id=%s WHERE id=%s",
-                (self.total_price, self.created_at, self.user_id, self.address_id, self.id))
+                "UPDATE orders SET total_price=%s, user_id=%s, address_id=%s WHERE id=%s",
+                (
+                    self.total_price,
+                    self.user_id,
+                    self.address_id,
+                    self.id,
+                ),
+            )
 
+        self.connection.commit()
+
+    def add_product(self, product_id, quantity):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            "INSERT INTO orders_products (quantity, order_id, product_id) VALUES (%s, %s, %s)",
+            (quantity, self.id, product_id),
+        )
         self.connection.commit()
 
     def load_user(self):
         cursor = self.connection.cursor()
-        cursor.execute(
-            "SELECT * FROM users WHERE id=%s", (self.user_id))
+        cursor.execute("SELECT * FROM users WHERE id=%s", (self.user_id,))
         row = cursor.fetchone()
-        self.user = row
+        self.user = User(row[0], row[1], row[2], row[3], row[4], self.connection)
 
     def load_address(self):
         cursor = self.connection.cursor()
-        cursor.execute(
-            "SELECT * FROM addresses WHERE id=%s", (self.address_id))
+        cursor.execute("SELECT * FROM addresses WHERE id=%s", (self.address_id,))
         row = cursor.fetchone()
-        self.address = row
+        self.address = Address(
+            row[0],
+            row[1],
+            row[2],
+            row[3],
+            row[4],
+            row[5],
+            row[6],
+            row[7],
+            self.connection,
+        )
 
-    def load_orders_products(self):
+    def load_products(self):
         if self.id == 0:
             return
 
         cursor = self.connection.cursor()
         cursor.execute(
-            "SELECT * FROM orders_products WHERE order_id=%s", (self.id))
+            "SELECT quantity, product_id FROM orders_products WHERE order_id=%s",
+            (self.id,),
+        )
         rows = cursor.fetchall()
-        self.orders_products = rows
+        self.products = []
+        for row in rows:
+            product_id = row[1]
+            product = Product.get_by_id(product_id, self.connection)
+            if product:
+                product.quantity = row[0]
+                self.products.append(product)

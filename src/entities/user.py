@@ -7,11 +7,19 @@
 import mysql.connector
 
 from entities.address import Address
-from entities.order import Order
+from entities.cart import Cart
 
 
 class User:
-    def __init__(self, id, name, email, phone_number, cpf, connection: mysql.connector.connection.MySQLConnection):
+    def __init__(
+        self,
+        id,
+        name,
+        email,
+        phone_number,
+        cpf,
+        connection: mysql.connector.connection.MySQLConnection,
+    ):
         self.id = id
         self.name = name
         self.email = email
@@ -37,7 +45,7 @@ class User:
             "name": self.name,
             "email": self.email,
             "phone_number": self.phone_number,
-            "cpf": self.cpf
+            "cpf": self.cpf,
         }
 
     @staticmethod
@@ -68,12 +76,14 @@ class User:
         if self.id == 0:
             cursor.execute(
                 "INSERT INTO users (name, email, phone_number, cpf) VALUES (%s, %s, %s, %s)",
-                (self.name, self.email, self.phone_number, self.cpf))
+                (self.name, self.email, self.phone_number, self.cpf),
+            )
             self.id = cursor.lastrowid
         else:
             cursor.execute(
                 "UPDATE users SET name=%s, email=%s, phone_number=%s, cpf=%s WHERE id=%s",
-                (self.name, self.email, self.phone_number, self.cpf, self.id))
+                (self.name, self.email, self.phone_number, self.cpf, self.id),
+            )
 
         self.connection.commit()
 
@@ -82,25 +92,33 @@ class User:
             return
 
         cursor = self.connection.cursor()
-        cursor.execute(
-            "SELECT * FROM addresses WHERE user_id=%s", (self.id,))
+        cursor.execute("SELECT * FROM addresses WHERE user_id=%s", (self.id,))
         rows = cursor.fetchall()
         self.addresses = []
         for row in rows:
-            address = Address(row[0], row[1], row[2], row[3],
-                              row[4], row[5], row[6], row[7], self.connection)
+            address = Address(
+                row[0],
+                row[1],
+                row[2],
+                row[3],
+                row[4],
+                row[5],
+                row[6],
+                row[7],
+                self.connection,
+            )
             self.addresses.append(address)
 
-    def load_orders(self):
+    def load_cart(self):
         if self.id == 0:
             return
 
         cursor = self.connection.cursor()
-        cursor.execute(
-            "SELECT * FROM orders WHERE user_id=%s", (self.id,))
-        rows = cursor.fetchall()
-        self.orders = []
-        for row in rows:
-            order = Order(row[0], row[1], row[2],
-                          row[3], row[4], self.connection)
-            self.orders.append(order)
+        cursor.execute("SELECT * FROM carts WHERE user_id=%s", (self.id,))
+        row = cursor.fetchone()
+        if row is None:
+            self.cart = Cart(0, self.id, self.connection)
+            self.cart.save()
+            return
+        self.cart = Cart(row[0], row[1], self.connection)
+        self.cart.load_products()
