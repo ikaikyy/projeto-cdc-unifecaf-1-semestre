@@ -58,9 +58,16 @@ class UsersPage(Adw.NavigationPage):
     __gtype_name__ = "UsersPage"
 
     users_list: Gtk.ListBox = Gtk.Template.Child("users_list")
+    refresh_users_button: Gtk.Button = Gtk.Template.Child("refresh_users_button")
 
     def __init__(self):
         super().__init__()
+        self.load_users()
+        self.refresh_users_button.connect("clicked", lambda _: self.refresh())
+
+    def refresh(self):
+        # Clear and reload users
+        self.users_list.remove_all()
         self.load_users()
 
     def load_users(self):
@@ -155,9 +162,7 @@ class UsersPage(Adw.NavigationPage):
 
         user.cart.clear()
 
-        # Refresh user list
-        self.users_list.remove_all()
-        self.load_users()
+        self.refresh()
 
         dialog.close()
 
@@ -197,8 +202,9 @@ class UsersPage(Adw.NavigationPage):
 
     def add_product_to_cart(self, dialog, user, product_id):
         user.cart.add_product(product_id)
-        self.users_list.remove_all()
-        self.load_users()
+
+        self.refresh()
+
         dialog.close()
 
 
@@ -207,9 +213,16 @@ class ProductsPage(Adw.NavigationPage):
     __gtype_name__ = "ProductsPage"
 
     products_list = Gtk.Template.Child("products_list")
+    refresh_products_button = Gtk.Template.Child("refresh_products_button")
 
     def __init__(self):
         super().__init__()
+        self.load_products()
+        self.refresh_products_button.connect("clicked", lambda _: self.refresh())
+
+    def refresh(self):
+        # Clear and reload products
+        self.products_list.remove_all()
         self.load_products()
 
     def load_products(self):
@@ -239,9 +252,16 @@ class OrdersPage(Adw.NavigationPage):
     __gtype_name__ = "OrdersPage"
 
     orders_list = Gtk.Template.Child("orders_list")
+    refresh_orders_button = Gtk.Template.Child("refresh_orders_button")
 
     def __init__(self):
         super().__init__()
+        self.load_orders()
+        self.refresh_orders_button.connect("clicked", lambda _: self.refresh())
+
+    def refresh(self):
+        # Clear and reload orders
+        self.orders_list.remove_all()
         self.load_orders()
 
     def load_orders(self):

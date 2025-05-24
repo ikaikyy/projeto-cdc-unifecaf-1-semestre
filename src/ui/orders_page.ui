@@ -3,16 +3,36 @@
   <template class="OrdersPage" parent="AdwNavigationPage">
     <property name="title">Pedidos</property>
     <child>
-      <object class="AdwClamp">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="vexpand">true</property>
         <property name="margin-top">120</property>
         <property name="margin-bottom">120</property>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkBox">
+            <property name="halign">GTK_ALIGN_CENTER</property>
+            <property name="margin-bottom">10</property>
             <child>
-              <object class="GtkListBox" id="orders_list">
-                <property name="valign">start</property>
-                <property name="css-classes">boxed-list</property>
-                <property name="selection-mode">none</property>
+              <object class="GtkButton" id="refresh_orders_button">
+                <property name="label">Refresh</property>
+                <property name="halign">center</property>
+                <property name="margin-bottom">10</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwClamp">
+            <property name="vexpand">true</property>
+            <child>
+              <object class="GtkScrolledWindow">
+                <child>
+                  <object class="GtkListBox" id="orders_list">
+                    <property name="valign">start</property>
+                    <property name="css-classes">boxed-list</property>
+                    <property name="selection-mode">none</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
