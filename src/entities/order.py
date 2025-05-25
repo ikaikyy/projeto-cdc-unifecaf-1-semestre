@@ -102,6 +102,11 @@ class Order:
 
         self.connection.commit()
 
+    def delete(self):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM orders WHERE id=%s", (self.id,))
+        self.connection.commit()
+
     def add_product(self, product_id, quantity):
         cursor = self.connection.cursor()
         cursor.execute(

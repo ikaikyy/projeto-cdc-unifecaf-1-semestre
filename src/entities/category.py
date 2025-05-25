@@ -67,6 +67,11 @@ class Category:
 
         self.connection.commit()
 
+    def delete(self):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM categories WHERE id=%s", (self.id,))
+        self.connection.commit()
+
     def load_products_categories(self):
         if self.id == 0:
             return

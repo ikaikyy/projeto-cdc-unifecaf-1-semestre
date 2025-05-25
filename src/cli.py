@@ -64,27 +64,6 @@ def update_user():
     print(f"User {name} updated successfully!")
 
 
-def delete_user():
-    try:
-        user_id = int(input("Enter the user's ID: "))
-    except ValueError:
-        print("Invalid user ID. Please enter a valid integer.")
-        return
-
-    connection = new_mysql_connection()
-    user = User.get_by_id(user_id, connection)
-
-    confirmation = input("Are you sure you want to delete this user? (y/n)")
-
-    if confirmation.lower() != "y":
-        print("User deletion canceled.")
-        return
-
-    user.delete()
-
-    print(f"User {user.name} deleted successfully!")
-
-
 def list_categories():
     connection = new_mysql_connection()
     categories = Category.list_all(connection)
@@ -132,27 +111,6 @@ def update_category():
     print(f"Category {name} updated successfully!")
 
 
-def delete_category():
-    try:
-        category_id = int(input("Enter the category's ID: "))
-    except ValueError:
-        print("Invalid category ID. Please enter a valid integer.")
-        return
-
-    connection = new_mysql_connection()
-    category = Category.get_by_id(category_id, connection)
-
-    confirmation = input("Are you sure you want to delete this category? (y/n)")
-
-    if confirmation.lower() != "y":
-        print("Category deletion canceled.")
-        return
-
-    category.delete()
-
-    print(f"Category {category.name} deleted successfully!")
-
-
 def list_products():
     connection = new_mysql_connection()
     products = Product.list_all(connection)
@@ -176,14 +134,16 @@ def register_product():
 
     connection = new_mysql_connection()
     product = Product(0, name, description, price, available_on_stock, connection)
+    product.save()
 
-    for category_id in categories:
-        category = Category.get_by_id(int(category_id), connection)
-        if category:
-            product.add_category(category.id)
-        else:
-            print(f"Category with ID {category_id} not found.")
-            return
+    if len(categories) > 0:
+        for category_id in categories:
+            category = Category.get_by_id(int(category_id), connection)
+            if category:
+                product.add_category(category.id)
+            else:
+                print(f"Category with ID {category_id} not found.")
+                return
 
     product.save()
 
@@ -197,6 +157,7 @@ def update_product():
 
     connection = new_mysql_connection()
     product = Product.get_by_id(product_id, connection)
+    product.load_categories()
 
     try:
         name = input(f"Enter the new name ({product.name}): ")
@@ -204,12 +165,14 @@ def update_product():
         categories = input(
             f"Enter the new categories ({', '.join([str(c) for c in product.categories])}): "
         ).split(",")
-        price = float(input(f"Enter the new price ({product.price}): "))
-        available_on_stock = int(
-            input(
+        price = input(f"Enter the new price ({str(product.price)}): ")
+        if price != "":
+            price = float(price)
+        available_on_stock = input(
                 f"Enter the new quantity available on stock ({product.available_on_stock}): "
             )
-        )
+        if available_on_stock != "":
+            available_on_stock = int(available_on_stock)
     except TypeError:
         print(
             "There's an error on the values you've provided, please insert valid values"
@@ -220,8 +183,11 @@ def update_product():
         product.name = name
     if description:
         product.description = description
-    if categories:
-        product.categories = categories
+    if len(categories) > 0:
+        product.clear_categories()
+        for category in categories:
+            if category != "":
+                product.add_category(category)
     if price:
         product.price = price
     if available_on_stock:
@@ -229,27 +195,6 @@ def update_product():
     product.save()
 
     print(f"Product {name} updated successfully!")
-
-
-def delete_product():
-    try:
-        product_id = int(input("Enter the product's ID: "))
-    except ValueError:
-        print("Invalid product ID. Please enter a valid integer.")
-        return
-
-    connection = new_mysql_connection()
-    product = Product.get_by_id(product_id, connection)
-
-    confirmation = input("Are you sure you want to delete this product? (y/n)")
-
-    if confirmation.lower() != "y":
-        print("Product deletion canceled.")
-        return
-
-    product.delete()
-
-    print(f"Product {product.name} deleted successfully!")
 
 
 def list_addresses(user_id):
@@ -303,7 +248,6 @@ def main():
             print("1. List Users")
             print("2. Register User")
             print("3. Update User")
-            print("4. Delete User")
             user_choice = input("Enter your choice: ")
 
             if user_choice == "1":
@@ -312,8 +256,6 @@ def main():
                 register_user()
             elif user_choice == "3":
                 update_user()
-            elif user_choice == "4":
-                delete_user()
             else:
                 print("Invalid choice, please try again.")
 
@@ -321,7 +263,6 @@ def main():
             print("1. List Products")
             print("2. Register Product")
             print("3. Update Product")
-            print("4. Delete Product")
             product_choice = input("Enter your choice: ")
 
             if product_choice == "1":
@@ -330,8 +271,6 @@ def main():
                 register_product()
             elif product_choice == "3":
                 update_product()
-            elif product_choice == "4":
-                delete_product()
             else:
                 print("Invalid choice, please try again.")
 
@@ -339,7 +278,6 @@ def main():
             print("1. List Categories")
             print("2. Register Category")
             print("3. Update Category")
-            print("4. Delete Category")
             category_choice = input("Enter your choice: ")
 
             if category_choice == "1":
@@ -348,8 +286,6 @@ def main():
                 register_category()
             elif category_choice == "3":
                 update_category()
-            elif category_choice == "4":
-                delete_category()
             else:
                 print("Invalid choice, please try again.")
 

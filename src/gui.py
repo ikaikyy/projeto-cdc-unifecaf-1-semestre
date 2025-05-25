@@ -71,8 +71,8 @@ class UsersPage(Adw.NavigationPage):
         self.load_users()
 
     def load_users(self):
-        self.users = User.list_all(connection)
-        for user in self.users:
+        users = User.list_all(connection)
+        for user in users:
             rows = [
                 BoxedListRow(f"{key}: {value}")
                 for key, value in user.as_dict(True).items()

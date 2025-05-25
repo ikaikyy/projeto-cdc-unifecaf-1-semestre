@@ -17,7 +17,7 @@ parser.add_argument("--interface", type=str,
 args = parser.parse_args()
 
 if args.setup or args.seed or args.drop:
-    connection = new_mysql_connection()
+    connection = new_mysql_connection(True)
 
     if args.drop:
         from setup import drop_database

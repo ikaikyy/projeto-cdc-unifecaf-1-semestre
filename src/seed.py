@@ -4,6 +4,8 @@ import mysql.connector
 def seed_database(connection: mysql.connector.MySQLConnection):
     cursor = connection.cursor()
 
+    cursor.execute("USE ecommerce;")
+
     cursor.execute("""
         INSERT INTO users (name, email, phone_number, cpf) VALUES
         ('Ana Souza', 'ana@example.com', '11912345678', '12345678901'),

@@ -104,11 +104,24 @@ class Product:
 
         self.connection.commit()
 
+    def delete(self):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM products WHERE id=%s", (self.id,))
+        self.connection.commit()
+
     def add_category(self, category_id):
         cursor = self.connection.cursor()
         cursor.execute(
             "INSERT INTO products_categories (product_id, category_id) VALUES (%s, %s)",
             (self.id, category_id),
+        )
+        self.connection.commit()
+
+    def clear_categories(self):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            "DELETE FROM products_categories WHERE product_id = %s",
+            (self.id,),
         )
         self.connection.commit()
 
